@@ -1,106 +1,81 @@
+const todoInput = document.querySelector('.todo-input')
+const todoBtn = document.querySelector('.todoBtn')
+const todoList  = document.querySelector('.todo-list')
+const filter = document.querySelector('.filter-todo')
 
-const inputText = document.querySelector('.input-todo')
-const todos = document.querySelector('.todo-list')
-const todoForm = document.querySelector('.site-form')
+todoBtn.addEventListener('click' , addTodo)
+todoList.addEventListener('click', deleteCheck)
+filter.addEventListener('click' , filterTodo)
 
-todoForm.addEventListener('submit' , (e) =>{
-    e.preventDefault()
-    const inputValue = inputText.value
-    inputText.value = ''
-    if(inputValue){
-        toDoList(inputValue)
-    }else{
-        alert('add anything')
-        inputText.value = ''
-        
-    }
-})
-function toDoList(todo) {
+
+
+
+function addTodo(e){
+    e.preventDefault();
+    //make todo div
+    const tododiv = document.createElement('div')
+    tododiv.classList.add('todo')
 //li
-const li = document.createElement('li')
-li.textContent = todo
-li.classList.add('todo-item')
-//paaragraph
-const p = document.createElement('p')
-p.textContent.todo
-li.appendChild(p)
-//check-btn
-const checkBtn = document.createElement('button')
-checkBtn.innerHTML = '<i class="fas fa-check"></i>'
-checkBtn.classList.add('check-btn')
-li.appendChild(checkBtn)
-
-//trash-btn
-const trashBtn = document.createElement('button')
-trashBtn.innerHTML = '<i class="fas fa-trash"></i>'
-trashBtn.classList.add('trash-btn')
-li.appendChild(trashBtn)
-// todos.style.padding = '10px'
-todos.appendChild(li)
-// console.log(li)
-
-
-document.addEventListener('click' , (e) =>{
-    if(e.target.classList[0] == 'trash-btn') {
-            const item = e.target.parentElement
-            item.remove() 
-            const listel = document.querySelectorAll('.todo-item')
-            if(listel.length == '0'){
-                // modal.classList.remove('hidden')
-                // overlay.classList.remove('hidden')
-                // todos.style.padding = '10px'
-            }
-        }
-        if(e.target.classList[0] == 'check-btn'){
-            const item = e.target.parentElement
-            item.classList.add("done")
-        }
-        })
-
+const newTodo = document.createElement('li')
+newTodo.innerText = todoInput.value
+newTodo.classList.add('todo-item')
+tododiv.appendChild(newTodo)
+//check button
+const checkbtn = document.createElement('button')
+checkbtn.innerHTML = '<i class="fas fa-check"></i>';
+checkbtn.classList.add('check-btn')
+tododiv.appendChild(checkbtn)
+//trash
+const trashbtn = document.createElement('button')
+trashbtn.innerHTML = '<i class="fas fa-trash"></i>';
+trashbtn.classList.add('trash-btn')
+tododiv.appendChild(trashbtn)
+//append to list
+todoList.appendChild(tododiv)
+// empty todo input
+todoInput.value = ''
 
 }
+function deleteCheck(e){
+    const item = e.target
+    if(item.classList[0] == 'trash-btn'){
+        const todo = item.parentElement
+        todo.classList.add('fall')
+        todo.addEventListener('transitionend', function (){
+            todo.remove()
+        })
+    }
 
+    //check
+    if(item.classList[0] == 'check-btn'){
+        const todo = item.parentElement
+        todo.classList.toggle("done")
+    }
 
+    
+}
 
-
-
-
-
-
-
-
-
-// const addTodo = document.querySelector('.addTodo')
-// const todoInput = document.querySelector('.input-todo')
-// const todoList = document.querySelector('.todo-list')
-
-// addTodo.addEventListener('click' , () =>{
-// })
-// function adder(e){
-//     e.preventDefault()
-//     //creating lies
-//     const newTodo = document.createElement('div')
-//     newTodo.classList.add('todo-item')
-//     const todo = document.createElement('li')
-//     todo.classList.add('todo')
-//     todoList.textContent = todoInput.value
-//     newTodo.appendChild('todo')
-//     //buttons
-//     const checkBtn = document.createElement('button')
-//     checkBtn.classList.add('checkBtn')
-//     checkBtn.innerHTML = '<i class="fas fa-circle-check"></i>'
-//     newTodo.appendChild(checkBtn)
-
-//     //trash
-//     const trashBtn = document.createElement('button')
-//     trashBtn.classList.add('trahBtn')
-//     trashBtn.innerHTML = '<i class="fas fa-trash"></i>'
-//     newTodo.appendChild(trashBtn)
-
-//     //add to ul
-//     todoList.appendChild(newTodo)
-
-//     todoInput.value = ''
-//     // console(todoInput.value)
-// }
-
+function filterTodo(e) {
+    const todos = todoList.childNodes;
+    todos.forEach(function(todo) {
+        switch(e.target.value) {
+            case "all":
+                todo.style.display = "flex";
+            break;
+            case "completed":
+            if(todo.classList.contains("done")){
+                todo.style.display = "flex";
+            }else{
+                todo.style.display = "none";
+            }
+            break;
+            case "uncompleted":
+                if(!todo.classList.contains("done")){
+                todo.style.display = "flex"
+                }else{
+                    todo.style.display = "none";
+                }
+                break;
+        }
+    })
+}
